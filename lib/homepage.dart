@@ -11,9 +11,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Hive Provider'),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Hive Provider'),
+        ),
+        body: Column());
   }
 }
