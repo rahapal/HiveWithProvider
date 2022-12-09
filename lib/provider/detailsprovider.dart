@@ -7,6 +7,7 @@ class DetailsProvider extends ChangeNotifier {
 
   List<Details> _details = [];
 
+  List<Details> get details => _details;
   void getDetails() async {
     var box = await Hive.openBox<Details>(_boxName);
     _details = box.values.toList();
@@ -24,6 +25,11 @@ class DetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void deleteItem() {}
+  void deleteItem(index) async {
+    var box = await Hive.openBox<Details>(_boxName);
+    await box.deleteAt(index);
+    _details = box.values.toList();
+    notifyListeners();
+  }
   // void editItem() {}
 }
