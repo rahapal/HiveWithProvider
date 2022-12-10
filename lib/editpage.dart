@@ -1,23 +1,30 @@
-import 'package:hive/hive.dart';
 import 'package:hivewithprovider/provider/detailsprovider.dart';
-import 'package:hivewithprovider/showpage.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 import 'database/details.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class EditPage extends StatefulWidget {
+  final Details getDetail;
+
+  const EditPage({Key? key, required this.getDetail}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _EditPageState extends State<EditPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    _nameController.text = widget.getDetail.name;
+    _phoneController.text = widget.getDetail.phone;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,27 +53,15 @@ class _HomePageState extends State<HomePage> {
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      context.read<DetailsProvider>().addItem(
-                            Details(
-                                id: const Uuid().v4(),
-                                name: _nameController.text,
-                                phone: _phoneController.text),
-                          );
+                      context.read<DetailsProvider>().editItem(Details(
+                          id: widget.getDetail.id,
+                          name: _nameController.text,
+                          phone: _phoneController.text));
+                      Navigator.pop(context);
                     },
                     child: const Text('Save')),
                 const SizedBox(
                   width: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ShowPage(),
-                      ),
-                    );
-                  },
-                  child: const Text('Details'),
                 ),
               ],
             ),

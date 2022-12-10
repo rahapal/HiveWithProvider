@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:hivewithprovider/provider/detailsprovider.dart';
 import 'package:provider/provider.dart';
+
+import 'editpage.dart';
 
 class ShowPage extends StatefulWidget {
   const ShowPage({super.key});
@@ -17,32 +20,44 @@ class _ShowPageState extends State<ShowPage> {
         title: const Text('Show Page'),
       ),
       body: Consumer<DetailsProvider>(
-        builder: (context, value, child) {
+        builder: (context, detailsProvider, child) {
           return ListView.builder(
-              itemCount: value.details.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Name: ${value.details[index].name}'),
-                        SizedBox(
-                          height: 10,
+            itemCount: detailsProvider.details.length,
+            itemBuilder: (context, index) {
+              return Row(
+                children: [
+                  Column(
+                    children: [
+                      Text(detailsProvider.details[index].name),
+                      Text(detailsProvider.details[index].phone),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      detailsProvider.deleteItem(index);
+                    },
+                    child: const Text('Delete'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPage(
+                            getDetail: detailsProvider.getDetail(index),
+                          ),
                         ),
-                        Text('Contact: ${value.details[index].phone}'),
-                      ],
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          value.deleteItem(index);
-                        },
-                        icon: const Icon(Icons.delete)),
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
-                  ],
-                );
-              });
+                      );
+                    },
+                    child: const Text('Edit'),
+                  ),
+                ],
+              );
+            },
+          );
         },
       ),
     );
